@@ -1,7 +1,7 @@
 OBJS = ChatLog.o ChatRoom.o MitmLogger.o SpamDefinitions.o main.o
-INCLUDEDIR = include #relative to source #If you ran the libomegle suggested install command, you'll want to set this to /usr/include/
-LIBDIR = . #relative to binary #If you ran the libomegle suggested install command, you'll want to set this to /usr/lib/
-FLAGS = -lboost_filesystem -lboost_system -lboost_regex -Wall -g -iquote$(INCLUDEDIR) -L../$(LIBDIR) -lomegle -Wl,-rpath,$(LIBDIR) -std=c++0x
+INCLUDEDIR = /usr/include/
+LIBDIR = /usr/lib/
+FLAGS = -lboost_filesystem -lboost_system -lboost_regex -Wall -g -iquote$(INCLUDEDIR) -L$(LIBDIR) -lomegle -Wl,-rpath,$(LIBDIR) -std=c++0x
 
 ../Omegle-MITM: $(OBJS)
 	g++ $(OBJS) $(FLAGS) -o ../Omegle-MITM

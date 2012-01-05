@@ -9,6 +9,6 @@ Only one conversation is logged at a time for bot-detection avoidance and it can
 
 Omegle MITM depends upon boost, including boost-regex and boost-filesystem. You can install these (Ubuntu 11.10) with `sudo apt-get install libboost1.46-dev libboost-regex1.46-dev libboost-filesystem1.46-dev libboost-system1.46-dev`.
 
-Additionally, you'll need the libomegle library. Acquire it from <https://github.com/personalcomputer/libomegle>. The Omegle MITM makefile expects libomegle.so to be in the root Omegle-MITM directory, and Omegle.h (With directory Omegle/\*) to be in Omegle-MITM/src/include/. This is just a simple configuration, you'll probably want to quickly replace the relevant flags in the makefile for your own setup.
+Additionally, you'll need the libomegle library. Acquire it from <https://github.com/personalcomputer/libomegle>.
 
 Once the dependencies are satisfied, compile Omegle-MITM by running `make` from the src directory.
