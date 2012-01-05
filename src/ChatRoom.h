@@ -7,6 +7,7 @@
 #include "Omegle.h"
 
 #include "ChatLog.h"
+#include "SpamDefinitions.h"
 
 struct Stranger
 {
@@ -27,7 +28,7 @@ class ChatRoom
 
   time_t lastActivity;
 
-  const std::vector<std::string> spamDictionary;
+  const SpamDefinitions& spamDefinitions;
 
   ChatLog* chatLog;
 
@@ -36,7 +37,7 @@ class ChatRoom
   void ForEachStrangerButOne(const std::vector<Stranger>::iterator exclude, std::function<void(Stranger&)> f);
 
   public:
-  ChatRoom(const std::vector<std::string>& spamDictionary,
+  ChatRoom(const SpamDefinitions& spamDefinitions,
            std::set<Omegle::ServerId_t>& failedServers); /*, //failedServers is both input and output.
            const bool persistent = false, //Does the chatroom persist when someone disconnects (and attempt to re-fill that position), or does it restart and acquire totally new participants.
            const bool groupchatMode = false, //Alert all participants to what is going on and prepends messages with the real sender's id.

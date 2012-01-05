@@ -1,8 +1,6 @@
 #include <string>
 #include <set>
 #include <boost/lexical_cast.hpp>
-#include <boost/algorithm/string.hpp>
-#include <boost/regex.hpp>
 #include <ctime>
 #include <functional>
 #include <algorithm>
@@ -11,6 +9,8 @@
 #include "Omegle.h"
 
 #include "Error.h"
+#include "SpamDefinitions.h"
+#include "ChatLog.h"
 
 #include "ChatRoom.h"
 
@@ -32,7 +32,7 @@ const time_t ADDITIONAL_TIMEOUT_BEFORE_RETRY_TIME_PER_MESSAGE = 20; //in seconds
   stranger->Disconnect();
 }*/
 
-ChatRoom::ChatRoom(const std::vector<std::string>& spamDictionary, std::set<Omegle::ServerId_t>& failedServers): messageCount(0), lastActivity(time(NULL)), spamDictionary(spamDictionary), chatLog(NULL)
+ChatRoom::ChatRoom(const SpamDefinitions& spamDefinitions, std::set<Omegle::ServerId_t>& failedServers): messageCount(0), lastActivity(time(NULL)), spamDefinitions(spamDefinitions), chatLog(NULL)
 {
   std::set<Omegle::ServerId_t> additionalAvoidServers;
 
@@ -107,35 +107,6 @@ void ChatRoom::ForEachStrangerButOne(const std::vector<Stranger>::iterator exclu
   }
 }
 
-bool SpamScan(const std::string& message, const std::vector<std::string>& spamDictionary) //Returns true if spam
-{
-  for(std::vector<std::string>::const_iterator spamItr = spamDictionary.begin(); spamItr != spamDictionary.end(); ++spamItr)
-  {
-    if(message.substr(0, spamItr->length()) == *spamItr)
-    {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-bool AggressiveSpamScan(const std::string& message) //Returns true if spam
-{
-  // Heuristics-based spam detection
-  std::string messageLc = boost::algorithm::to_lower_copy(message); 
-
-  boost::smatch regexUrlMatch;
-
-  return boost::regex_search(messageLc, regexUrlMatch, boost::regex("(com/)|([^\\.]+\\.com)")) ||  //Match .com urls. Quite simple. All you need.
-         (messageLc.find("facebook") != std::string::npos) ||
-         (messageLc.find("twitt") != std::string::npos) ||
-         (messageLc.find("[dot]") != std::string::npos) ||
-         (messageLc.find("(dot)") != std::string::npos) ||
-         (messageLc.find(" dot ") != std::string::npos) ||
-         (messageLc.find(" fb") != std::string::npos);
-}
-
 void ChatRoom::HandleEvents()
 {
   for(std::vector<Stranger>::iterator strangerItr = strangers.begin(); strangerItr != strangers.end(); ++strangerItr)
@@ -154,10 +125,10 @@ void ChatRoom::HandleEvents()
         chatLog->Log(strangerName+": "+message);
 
         // Stop from repeating spam
-        if(SpamScan(message, spamDictionary))
+        if(spamDefinitions.CheckSpam(message))
         {
           Disconnect();
-          chatLog->Log("(disconnected - spam filtering (predefined))");
+          chatLog->Log("(disconnected - spam filtering");
           return;
         }
 
@@ -165,7 +136,7 @@ void ChatRoom::HandleEvents()
         {
           // Use aggressive spam filtering for the first message
 
-          if(AggressiveSpamScan(message))
+          if(spamDefinitions.CheckSpamHeuristic(message))
           {
             Disconnect();
             chatLog->Log("(disconnected - spam filtering (heuristic))");

@@ -1,0 +1,10 @@
+#More aggressive heuristic regular expressions that will be applied to the first chat message to determine if it is spam or not. Instead of searching for predefined spam messages, this searches more generally for likely indicators of spam. As you can see, here I have it looking for URLs, common URL obfuscation methods, and references to Twitter or Facebook.
+
+(com/)|([^\.]+\.com)
+\[dot\]
+\(dot\)
+ dot 
+facebook
+twitt
+ fb
+f@ceb00k

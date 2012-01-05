@@ -13,8 +13,6 @@ class MitmLogger
 
   std::set<Omegle::ServerId_t> failedServers;
 
-  std::vector<std::string> LoadSpam();
-
   unsigned int GetHighestPreexistingLogNumber();
 
   public:

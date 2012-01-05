@@ -1,2 +1,2 @@
-#Place found spam messages here to automatically ignore them and disconnect without retransmitting. One spam message per line.
-#The spam message does not need to perfectly match the line, all that matters is the spam message's start matches the line. (Meaning, only post the first 10 or so words of the spam message and it will detect it fine.)
+#Regular expressions that will be applied to all chat messages to determine if they are spam or not. (Spam is then blocked and not retransmitted)
+
