@@ -128,7 +128,7 @@ void ChatRoom::HandleEvents()
         if(spamDefinitions.CheckSpam(message))
         {
           Disconnect();
-          chatLog->Log("(disconnected - spam filtering");
+          chatLog->Log("(disconnected - spam filtering)");
           return;
         }
 
